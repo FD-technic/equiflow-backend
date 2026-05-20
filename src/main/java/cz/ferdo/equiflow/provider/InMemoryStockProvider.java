@@ -1,9 +1,8 @@
 package cz.ferdo.equiflow.provider;
 
-import cz.ferdo.equiflow.model.StockPoint;
+import cz.ferdo.equiflow.dto.StockQuery;
+import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.repository.StockRepository;
-
-import java.util.List;
 
 public class InMemoryStockProvider implements StockDataProvider{
 
@@ -12,8 +11,9 @@ public class InMemoryStockProvider implements StockDataProvider{
     public InMemoryStockProvider(StockRepository repository) {
         this.repository = repository;
     }
+
     @Override
-    public List<StockPoint> fetchStock(String ticker) {
-        return repository.findBySymbol(ticker);
+    public Stock fetchStock(StockQuery query) {
+        return repository.findBySymbol(query.ticker().toUpperCase());
     }
 }

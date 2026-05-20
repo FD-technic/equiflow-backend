@@ -8,7 +8,7 @@ public class Stock {
     private final String ticker;
     private final String currency;
 
-    public Stock(List<StockPoint> points, String ticket, String currency) {
+    public Stock(String ticket, List<StockPoint> points, String currency) {
         this.points = List.copyOf(points);
         this.ticker = ticket;
         this.currency = currency;

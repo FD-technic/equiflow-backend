@@ -1,10 +1,9 @@
 package cz.ferdo.equiflow.provider;
 
-import cz.ferdo.equiflow.model.StockPoint;
-
-import java.util.List;
+import cz.ferdo.equiflow.dto.StockQuery;
+import cz.ferdo.equiflow.model.Stock;
 
 public interface StockDataProvider {
-    // co to znamená?
-    List<StockPoint> fetchStock(String ticker);
+
+    Stock fetchStock(StockQuery query);
 }

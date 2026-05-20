@@ -1,8 +1,14 @@
 package cz.ferdo.equiflow.repository;
 
+import cz.ferdo.equiflow.dto.MultiStockDTO;
+import cz.ferdo.equiflow.dto.StockDTO;
+import cz.ferdo.equiflow.dto.StockPointDTO;
+import cz.ferdo.equiflow.mapper.StockPointMapper;
+import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.model.StockPoint;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +83,26 @@ public class InMemoryStockRepository implements StockRepository {
     );
 
     @Override
-    public List<StockPoint> findBySymbol(String symbol) {
-        return data.getOrDefault(symbol.toUpperCase(), List.of());
+    public Stock findBySymbol(String symbol) {
+        return new Stock(
+                symbol,
+                data.getOrDefault(symbol.toUpperCase(), List.of()), "USD");
+    }
+
+    @Override
+    public MultiStockDTO getAll() {
+
+        List<StockDTO> stocks = data.entrySet()
+                .stream()
+                .map((stock) -> {
+                    return new StockDTO(
+                            stock.getKey(), "",
+                            stock.getValue()
+                                    .stream()
+                                    .map(StockPointMapper::toDTO)
+                                    .toList());
+                })
+                .toList();
+        return new MultiStockDTO(stocks);
     }
 }

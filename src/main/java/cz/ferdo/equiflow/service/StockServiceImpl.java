@@ -1,8 +1,13 @@
 package cz.ferdo.equiflow.service;
 
+import cz.ferdo.equiflow.dto.MultiStockDTO;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockPointDTO;
+import cz.ferdo.equiflow.dto.StockQuery;
+import cz.ferdo.equiflow.mapper.StockPointMapper;
+import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.model.StockPoint;
+import cz.ferdo.equiflow.provider.AlphaVantageProvider;
 import cz.ferdo.equiflow.repository.StockRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,28 +17,32 @@ import java.util.List;
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
+    private final AlphaVantageProvider alphaVantageProvider;
 
 
-    public StockServiceImpl(StockRepository stockRepository) {
+    public StockServiceImpl(StockRepository stockRepository, AlphaVantageProvider alphaVantageProvider) {
         this.stockRepository = stockRepository;
+        this.alphaVantageProvider = alphaVantageProvider;
+    }
+
+    @Override
+    public MultiStockDTO getAll() {
+
+        return stockRepository.getAll();
     }
 
     @Override
     public StockDTO getStockData(String ticker, int days) {
-        List<StockPoint> allData = stockRepository.findBySymbol(ticker.toUpperCase());
+        Stock stockData = stockRepository.findBySymbol(ticker.toUpperCase());
 
-        if (allData.isEmpty()) {
-            return new StockDTO(ticker, "USD", List.of());
-        }
+        return new StockDTO(ticker, "USD", stockData.getPoints()
+                .stream()
+                .map(StockPointMapper::toDTO)
+                .toList());
+    }
 
-        if (days > 0 && days < allData.size()) {
-            allData = allData.subList(allData.size() - days, allData.size());
-        }
-
-        List<StockPointDTO> points = allData.stream()
-                .map(p -> new StockPointDTO(p.getDate(), p.getPrice()))
-                .toList();
-
-        return new StockDTO(ticker, "USD", points);
+    @Override
+    public Stock getLiveTicker(StockQuery query) {
+        return alphaVantageProvider.fetchStock(query);
     }
 }

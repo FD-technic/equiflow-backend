@@ -1,10 +1,11 @@
 package cz.ferdo.equiflow.repository;
 
-import cz.ferdo.equiflow.model.StockPoint;
-
-import java.util.List;
+import cz.ferdo.equiflow.dto.MultiStockDTO;
+import cz.ferdo.equiflow.model.Stock;
 
 public interface StockRepository {
 
-    List<StockPoint> findBySymbol(String symbol);
+    Stock findBySymbol(String symbol);
+
+    MultiStockDTO getAll();
 }
