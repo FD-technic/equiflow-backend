@@ -19,6 +19,6 @@ public record StockDTO(
 
     @Override
     public List<StockPointDTO> data() {
-        return data;
+        return data.reversed();
     }
 }

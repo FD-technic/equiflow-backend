@@ -15,7 +15,7 @@ public class Stock {
     }
 
     public List<StockPoint> getPoints() {
-        return points;
+        return points.reversed();
     }
 
     public String getTicker() {
