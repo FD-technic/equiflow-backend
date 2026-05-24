@@ -8,4 +8,6 @@ public interface StockRepository {
     Stock findBySymbol(String symbol);
 
     MultiStockDTO getAll();
+
+    void loadStockFile(String fileName);
 }

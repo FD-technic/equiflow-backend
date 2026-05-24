@@ -3,6 +3,7 @@ package cz.ferdo.equiflow.provider;
 import cz.ferdo.equiflow.dto.StockQuery;
 import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.repository.StockRepository;
+import org.springframework.web.client.RestClient;
 
 public class InMemoryStockProvider implements StockDataProvider{
 
@@ -13,7 +14,14 @@ public class InMemoryStockProvider implements StockDataProvider{
     }
 
     @Override
-    public Stock fetchStock(StockQuery query) {
-        return repository.findBySymbol(query.ticker().toUpperCase());
+    public Stock fetchStock(String json) {
+        return null;
     }
+
+    @Override
+    public String fetchRawJson(StockQuery query) {
+        RestClient client = RestClient.create();
+        return null;
+    }
+
 }

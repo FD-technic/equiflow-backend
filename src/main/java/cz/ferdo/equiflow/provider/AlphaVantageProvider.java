@@ -16,54 +16,36 @@ import java.util.Map;
 @Component
 public class AlphaVantageProvider implements StockDataProvider {
 
-    private JsonNode seriesData;
-
     @Override
-    public Stock fetchStock(StockQuery query) {
-        RestClient client = RestClient.create();
-
-        String function = switch (query.safeInterval()) {
-            case DAILY -> "TIME_SERIES_DAILY";
-            case WEEKLY -> "TIME_SERIES_WEEKLY";
-            case MONTHLY -> "TIME_SERIES_MONTHLY";
-        };
-
-        String seriesName = switch (query.safeInterval()) {
-            case DAILY -> "Time Series (Daily)";
-            case WEEKLY -> "Weekly Time Series";
-            case MONTHLY -> "Monthly Time Series";
-        };
-
-        /**
-         * Dotaz na hledání produktu:
-         *
-         * https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=tesco&apikey=HRQED98AMN93D5WT
-         */
-        String json = client.get()
-                .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=HRQED98AMN93D5WT")
-                .retrieve()
-                .body(String.class);
-
+    public Stock fetchStock(String json) {
         ObjectMapper mapper = new ObjectMapper();
-
         JsonNode root;
+        JsonNode seriesData = null;
 
         try {
-        root = mapper.readTree(json);
-
+            root = mapper.readTree(json);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-
-        seriesData = root.get(seriesName);
-
-        List<StockPoint> myList = new ArrayList<>();
         Iterator<Map.Entry<String, JsonNode>> fields =
-                seriesData.fields();
+                root.fields();
 
         while (fields.hasNext()) {
             Map.Entry<String, JsonNode> entry = fields.next();
+            String fieldName = entry.getKey();
+            if (fieldName.contains("Time Series")) {
+                seriesData = entry.getValue();
+                break;
+            }
+        }
+
+        List<StockPoint> myList = new ArrayList<>();
+        Iterator<Map.Entry<String, JsonNode>> points =
+                seriesData.fields();
+
+        while (points.hasNext()) {
+            Map.Entry<String, JsonNode> entry = points.next();
             String date = entry.getKey();
             double close = entry.getValue().get("4. close").asDouble();
 
@@ -72,4 +54,30 @@ public class AlphaVantageProvider implements StockDataProvider {
 
         return new Stock(root.get("Meta Data").get("2. Symbol").asText(), myList, "USD");
     }
+
+    @Override
+    public String fetchRawJson(StockQuery query) {
+        RestClient client = RestClient.create();
+
+        String function;
+
+        switch (query.safePeriod()) {
+            case YEAR:
+            case TWO_YEARS:
+                function = "TIME_SERIES_WEEKLY";
+                break;
+            case FIVE_YEARS:
+                function = "TIME_SERIES_MONTHLY";
+                break;
+            default:
+                function = "TIME_SERIES_DAILY";
+        }
+
+        return client.get()
+                .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=HRQED98AMN93D5WT")
+                .retrieve()
+                .body(String.class);
+    }
+
+
 }

@@ -1,15 +1,15 @@
 package cz.ferdo.equiflow.dto;
 
 import cz.ferdo.equiflow.model.Interval;
-import org.springframework.scheduling.config.IntervalTask;
+import cz.ferdo.equiflow.model.Period;
 
 public record StockQuery(
         String ticker,
-        Integer days,
+        Period period,
         Interval interval
 ) {
-    public int safeDays() {
-        return days != null ? days : 30;
+    public Period safePeriod() {
+        return period != null ? period : Period.QUARTER;
     }
 
     public Interval safeInterval() {

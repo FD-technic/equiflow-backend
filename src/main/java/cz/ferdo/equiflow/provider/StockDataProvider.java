@@ -5,5 +5,7 @@ import cz.ferdo.equiflow.model.Stock;
 
 public interface StockDataProvider {
 
-    Stock fetchStock(StockQuery query);
+    Stock fetchStock(String json);
+
+    String fetchRawJson(StockQuery query);
 }
