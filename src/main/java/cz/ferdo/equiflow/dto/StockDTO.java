@@ -1,5 +1,7 @@
 package cz.ferdo.equiflow.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public record StockDTO(
@@ -19,6 +21,8 @@ public record StockDTO(
 
     @Override
     public List<StockPointDTO> data() {
-        return data.reversed();
+        List<StockPointDTO> reversed = new ArrayList<>(data);
+        Collections.reverse(reversed);
+        return reversed;
     }
 }

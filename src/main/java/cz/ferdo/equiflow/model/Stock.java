@@ -1,5 +1,7 @@
 package cz.ferdo.equiflow.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Stock {
@@ -15,7 +17,10 @@ public class Stock {
     }
 
     public List<StockPoint> getPoints() {
-        return points.reversed();
+        List<StockPoint> reversed = new ArrayList<>(points);
+        Collections.reverse(reversed);
+
+        return reversed;
     }
 
     public String getTicker() {
