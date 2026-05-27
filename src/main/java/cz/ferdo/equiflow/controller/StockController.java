@@ -7,7 +7,6 @@ import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.service.StockService;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class StockController {
 
