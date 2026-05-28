@@ -21,20 +21,12 @@ public class StockController {
         return stockService.getAll();
     }
 
-    @GetMapping("/api/stocks/{ticker}")
-    public StockDTO getStockData(
-            @PathVariable String ticker,
-            @RequestParam(defaultValue = "5") int days
-    ) {
-        System.out.println(ticker + " " + days);
-        return stockService.getStockData(ticker.toUpperCase(), days);
-    }
 
     /**
      * AlphaVantage.co
      * @param query
      */
-    @GetMapping("/api/av/stocks")
+    @GetMapping("/api/stocks/av")
     public Stock showLiveData(@ModelAttribute StockQuery query) {
         return stockService.getLiveTicker(query);
     }

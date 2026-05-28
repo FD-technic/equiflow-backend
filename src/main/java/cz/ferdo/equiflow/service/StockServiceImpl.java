@@ -56,7 +56,6 @@ public class StockServiceImpl implements StockService {
                 Files.createDirectories(Paths.get("cache"));
                 json = alphaVantageProvider.fetchRawJson(query);
                 Files.writeString(path, json);
-                System.out.printf("Soubor %s je uložený!%n", path);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -90,6 +89,4 @@ public class StockServiceImpl implements StockService {
         }
         return false;
     }
-
-
 }
