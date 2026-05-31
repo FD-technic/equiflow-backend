@@ -27,6 +27,7 @@ public class AlphaVantageProvider implements StockDataProvider {
 
         try {
             root = mapper.readTree(json);
+            System.out.println("ROOT: " + root);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -37,6 +38,7 @@ public class AlphaVantageProvider implements StockDataProvider {
         while (fields.hasNext()) {
             Map.Entry<String, JsonNode> entry = fields.next();
             String fieldName = entry.getKey();
+
             if (fieldName.contains("Time Series")) {
                 seriesData = entry.getValue();
                 break;
