@@ -4,6 +4,7 @@ import cz.ferdo.equiflow.dto.MultiStockDTO;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
 import cz.ferdo.equiflow.mapper.StockPointMapper;
+import cz.ferdo.equiflow.model.ProviderApiKey;
 import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.provider.AlphaVantageProvider;
 import cz.ferdo.equiflow.repository.StockRepository;
@@ -48,16 +49,15 @@ public class StockServiceImpl implements StockService {
     @Override
     public Stock getLiveTicker(StockQuery query) {
         Stock response;
-        String json = "";
         Path path = Paths.get("cache/" + query.ticker().toUpperCase() + ".json");
 
         if (!cacheValid(path)) {
             try {
                 Files.createDirectories(Paths.get("cache"));
-                json = alphaVantageProvider.fetchRawJson(query);
-                Files.writeString(path, json);
+                Files.writeString(path, alphaVantageProvider.fetchRawJson(query));
+                System.out.println("Loaded fresh data from AlphaVantage");
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.out.println("AlphaVantage unavailable, using cached data.");
             }
         }
 
@@ -68,6 +68,21 @@ public class StockServiceImpl implements StockService {
         }
 
         return response;
+    }
+
+    @Override
+    public String setApiKey(ProviderApiKey apiKey) {
+        Path path = Paths.get(
+                "settings/" + apiKey.provider() + ".key"
+        );
+
+        try {
+            Files.createDirectories(Paths.get("settings"));
+            Files.writeString(path, apiKey.apiKey());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "API kye for provider " + apiKey.provider() + " saved";
     }
 
     private boolean cacheValid(Path path) {

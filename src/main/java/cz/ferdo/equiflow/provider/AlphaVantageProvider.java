@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +62,15 @@ public class AlphaVantageProvider implements StockDataProvider {
     public String fetchRawJson(StockQuery query) {
         RestClient client = RestClient.create();
 
+        String apiKey = "NULL";
+
+        try {
+            apiKey = Files.readString(Paths.get("settings/av.key"));
+        } catch (IOException e) {
+            System.out.println("API key not found");
+            throw new RuntimeException(e);
+        }
+
         String function;
 
         switch (query.safePeriod()) {
@@ -74,7 +86,7 @@ public class AlphaVantageProvider implements StockDataProvider {
         }
 
         return client.get()
-                .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=HRQED98AMN93D5WT")
+                .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=" + apiKey)
                 .retrieve()
                 .body(String.class);
     }

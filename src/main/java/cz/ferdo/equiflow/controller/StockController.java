@@ -3,6 +3,7 @@ package cz.ferdo.equiflow.controller;
 import cz.ferdo.equiflow.dto.MultiStockDTO;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
+import cz.ferdo.equiflow.model.ProviderApiKey;
 import cz.ferdo.equiflow.model.Stock;
 import cz.ferdo.equiflow.service.StockService;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +30,10 @@ public class StockController {
     @GetMapping("/api/stocks/av")
     public Stock showLiveData(@ModelAttribute StockQuery query) {
         return stockService.getLiveTicker(query);
+    }
+
+    @PostMapping("admin/setkey")
+    public String setApiKey(@RequestBody ProviderApiKey apiKey) {
+        return stockService.setApiKey(apiKey);
     }
 }
