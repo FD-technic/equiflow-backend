@@ -54,7 +54,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public StockResponse getAlphaVantageStock(StockQuery query) {
         Stock stock;
-        Path path = Paths.get("cache/" + query.ticker().toUpperCase() + ".json");
+        Path path = Paths.get("cache/" + query.ticker().toUpperCase() + "-" + query.safePeriod() + ".json");
 
         if (!cacheValid(path)) {
             try {

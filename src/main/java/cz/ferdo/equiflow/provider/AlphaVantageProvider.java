@@ -71,19 +71,11 @@ public class AlphaVantageProvider implements StockDataProvider {
             throw new RuntimeException(e);
         }
 
-        String function;
-
-        switch (query.safePeriod()) {
-            case YEAR:
-            case TWO_YEARS:
-                function = "TIME_SERIES_WEEKLY";
-                break;
-            case FIVE_YEARS:
-                function = "TIME_SERIES_MONTHLY";
-                break;
-            default:
-                function = "TIME_SERIES_DAILY";
-        }
+        String function = switch (query.safePeriod()) {
+            case WEEK -> "TIME_SERIES_WEEKLY";
+            case MONTH -> "TIME_SERIES_MONTHLY";
+            default -> "TIME_SERIES_DAILY";
+        };
 
         return client.get()
                 .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=" + apiKey)

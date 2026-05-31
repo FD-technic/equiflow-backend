@@ -9,12 +9,12 @@ public record StockQuery(
         Interval interval
 ) {
     public Period safePeriod() {
-        return period != null ? period : Period.QUARTER;
+        return period != null ? period : Period.WEEK;
     }
 
     public Interval safeInterval() {
         return interval != null
                 ? interval
-                : Interval.DAILY;
+                : Interval.WEEKLY;
     }
 }
