@@ -1,11 +1,10 @@
 package cz.ferdo.equiflow.service;
 
 import cz.ferdo.equiflow.dto.MultiStockDTO;
-import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
-import cz.ferdo.equiflow.mapper.StockPointMapper;
 import cz.ferdo.equiflow.model.ProviderApiKey;
 import cz.ferdo.equiflow.model.Stock;
+import cz.ferdo.equiflow.model.StockResponse;
 import cz.ferdo.equiflow.provider.AlphaVantageProvider;
 import cz.ferdo.equiflow.repository.StockRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -37,18 +37,23 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public StockDTO getStockData(String ticker, int days) {
-        Stock stockData = stockRepository.findBySymbol(ticker.toUpperCase());
+    public StockResponse getLocalData(String ticker, int days) {
+        Path path = Paths.get("cache/" + ticker.toUpperCase() + ".json");
 
-        return new StockDTO(ticker, "USD", stockData.getPoints()
-                .stream()
-                .map(StockPointMapper::toDTO)
-                .toList());
+        Stock stock = null;
+
+        try {
+           stock = alphaVantageProvider.fetchStock(Files.readString(path));
+        } catch (IOException e) {
+            System.out.println("Data not exist");
+        }
+
+        return new StockResponse(stock, lastUpdate(path));
     }
 
     @Override
-    public Stock getLiveTicker(StockQuery query) {
-        Stock response;
+    public StockResponse getAlphaVantageStock(StockQuery query) {
+        Stock stock;
         Path path = Paths.get("cache/" + query.ticker().toUpperCase() + ".json");
 
         if (!cacheValid(path)) {
@@ -62,12 +67,12 @@ public class StockServiceImpl implements StockService {
         }
 
         try {
-            response = alphaVantageProvider.fetchStock(Files.readString(path));
+            stock = alphaVantageProvider.fetchStock(Files.readString(path));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        return response;
+        return new StockResponse(stock, lastUpdate(path));
     }
 
     @Override
@@ -82,26 +87,31 @@ public class StockServiceImpl implements StockService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "API kye for provider " + apiKey.provider() + " saved";
+        return "API key for provider " + apiKey.provider() + " saved";
     }
 
     private boolean cacheValid(Path path) {
         if (Files.exists(path)) {
-            LocalDateTime modified;
+
             LocalDateTime today = LocalDateTime.now();
 
-            try {
-                FileTime time = Files.getLastModifiedTime(path);
-                modified = time.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if (modified.isAfter(today.minusDays(1))) {
-                return true;
-            }
+            return lastUpdate(path).isAfter(today.minusDays(1));
         }
         return false;
+    }
+
+    private LocalDateTime lastUpdate(Path path) {
+        LocalDateTime modified;
+
+        try {
+            FileTime time = Files.getLastModifiedTime(path);
+            modified = time.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return modified.truncatedTo(ChronoUnit.SECONDS);
     }
 }

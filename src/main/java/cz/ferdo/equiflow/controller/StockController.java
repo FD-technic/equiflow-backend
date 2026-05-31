@@ -1,10 +1,9 @@
 package cz.ferdo.equiflow.controller;
 
 import cz.ferdo.equiflow.dto.MultiStockDTO;
-import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
 import cz.ferdo.equiflow.model.ProviderApiKey;
-import cz.ferdo.equiflow.model.Stock;
+import cz.ferdo.equiflow.model.StockResponse;
 import cz.ferdo.equiflow.service.StockService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,16 +21,28 @@ public class StockController {
         return stockService.getAll();
     }
 
+    @GetMapping ("/api/stocks/{ticker}")
+    public StockResponse getLocalData(
+            @PathVariable String ticker,
+            @RequestParam(defaultValue = "10") int days) {
+
+        return stockService.getLocalData(ticker, days);
+    }
 
     /**
      * AlphaVantage.co
      * @param query
      */
     @GetMapping("/api/stocks/av")
-    public Stock showLiveData(@ModelAttribute StockQuery query) {
-        return stockService.getLiveTicker(query);
+    public StockResponse showLiveData(@ModelAttribute StockQuery query) {
+        return stockService.getAlphaVantageStock(query);
     }
 
+    /**
+     *
+     * @param apiKey
+     * @return
+     */
     @PostMapping("admin/setkey")
     public String setApiKey(@RequestBody ProviderApiKey apiKey) {
         return stockService.setApiKey(apiKey);
