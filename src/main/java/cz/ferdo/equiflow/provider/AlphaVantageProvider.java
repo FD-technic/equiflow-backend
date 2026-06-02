@@ -51,7 +51,7 @@ public class AlphaVantageProvider implements StockDataProvider {
         // Debug output
         if (seriesData == null) {
             System.out.println("=== RAW RESPONSE START ===");
-            //System.out.println(root.toPrettyString());
+            System.out.println(root.toPrettyString());
             System.out.println("=== RAW RESPONSE END ===");
 
             throw new IllegalStateException(
