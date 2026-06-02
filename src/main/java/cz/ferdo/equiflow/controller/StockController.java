@@ -41,6 +41,16 @@ public class StockController {
 
     /**
      *
+     * @param provider
+     * @return
+     */
+    @GetMapping("admin/getkey/{provider}")
+    public String getApiKey(@PathVariable String provider) {
+        return stockService.getApiKey(provider);
+    }
+
+    /**
+     *
      * @param apiKey
      * @return
      */

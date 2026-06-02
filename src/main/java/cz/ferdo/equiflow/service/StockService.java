@@ -14,4 +14,6 @@ public interface StockService {
     StockResponse getAlphaVantageStock(StockQuery query);
 
     String setApiKey(ProviderApiKey apiKey);
+
+    String getApiKey(String provider);
 }

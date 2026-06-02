@@ -27,13 +27,16 @@ public class AlphaVantageProvider implements StockDataProvider {
 
         try {
             root = mapper.readTree(json);
-            System.out.println("ROOT: " + root);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         Iterator<Map.Entry<String, JsonNode>> fields =
                 root.fields();
+
+        // Debug output
+        System.out.println("ROOT FIELDS:");
+        root.fieldNames().forEachRemaining(System.out::println);
 
         while (fields.hasNext()) {
             Map.Entry<String, JsonNode> entry = fields.next();
@@ -43,6 +46,16 @@ public class AlphaVantageProvider implements StockDataProvider {
                 seriesData = entry.getValue();
                 break;
             }
+        }
+
+        // Debug output
+        if (seriesData == null) {
+            System.out.println("=== RAW RESPONSE START ===");
+            //System.out.println(root.toPrettyString());
+            System.out.println("=== RAW RESPONSE END ===");
+
+            throw new IllegalStateException(
+                    "No Time Series found in AlphaVantage response");
         }
 
         List<StockPoint> myList = new ArrayList<>();
@@ -79,9 +92,16 @@ public class AlphaVantageProvider implements StockDataProvider {
             default -> "TIME_SERIES_DAILY";
         };
 
-        return client.get()
+        String response = client.get()
                 .uri("https://www.alphavantage.co/query?function=" + function + "&symbol=" + query.ticker().toUpperCase() + "&outputsize=compact&apikey=" + apiKey)
                 .retrieve()
                 .body(String.class);
+
+        if (response != null && !response.contains("Time Series")) {
+            System.out.println("INVALID ALPHAVANTAGE RESPONSE:");
+            System.out.println(response);
+        }
+
+        return response;
     }
 }

@@ -75,6 +75,8 @@ public class StockServiceImpl implements StockService {
         return new StockResponse(stock, lastUpdate(path));
     }
 
+
+
     @Override
     public String setApiKey(ProviderApiKey apiKey) {
         Path path = Paths.get(
@@ -89,6 +91,23 @@ public class StockServiceImpl implements StockService {
         }
         return "API key for provider " + apiKey.provider() + " saved";
     }
+
+    @Override
+    public String getApiKey(String provider) {
+        String returnedKey;
+        Path path = Paths.get(
+                "settings/" + provider + ".key"
+        );
+
+        try {
+            returnedKey = Files.readString(path);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "API key for provider " + provider + " is: " + returnedKey;
+    }
+
 
     private boolean cacheValid(Path path) {
         if (Files.exists(path)) {
