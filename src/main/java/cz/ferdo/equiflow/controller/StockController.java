@@ -35,6 +35,7 @@ public class StockController {
      */
     @GetMapping("/api/stocks/av")
     public StockResponse showLiveData(@ModelAttribute StockQuery query) {
+        System.out.println("BUILD 2026-06-02");
         return stockService.getAlphaVantageStock(query);
     }
 
