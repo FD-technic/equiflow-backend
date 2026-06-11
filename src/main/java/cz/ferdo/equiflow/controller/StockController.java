@@ -1,9 +1,9 @@
 package cz.ferdo.equiflow.controller;
 
 import cz.ferdo.equiflow.dto.MultiStockDTO;
+import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
-import cz.ferdo.equiflow.model.ProviderApiKey;
-import cz.ferdo.equiflow.model.StockResponse;
+import cz.ferdo.equiflow.config.ProviderApiKey;
 import cz.ferdo.equiflow.service.StockService;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,26 +21,18 @@ public class StockController {
         return stockService.getAll();
     }
 
-    @GetMapping ("/api/stocks/{ticker}")
-    public StockResponse getLocalData(
-            @PathVariable String ticker,
-            @RequestParam(defaultValue = "10") int days) {
-
-        return stockService.getLocalData(ticker, days);
-    }
-
     /**
-     * AlphaVantage.co
+     * provider www.AlphaVantage.com
      * @param query
      */
     @GetMapping("/api/stocks/av")
-    public StockResponse showLiveData(@ModelAttribute StockQuery query) {
-        System.out.println("BUILD 2026-06-02");
+    public StockDTO showLiveData(@ModelAttribute StockQuery query) {
+        System.out.println("BUILD 2026-06-11");
         return stockService.getAlphaVantageStock(query);
     }
 
     /**
-     *
+     *Získá uložený ApyKey podle providera
      * @param provider
      * @return
      */
@@ -50,7 +42,7 @@ public class StockController {
     }
 
     /**
-     *
+     * Nastaví a uloží ApyKey podle providera
      * @param apiKey
      * @return
      */

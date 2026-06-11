@@ -1,16 +1,19 @@
 package cz.ferdo.equiflow.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.ferdo.equiflow.dto.StockDTO;
+import cz.ferdo.equiflow.dto.StockPointDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
-import cz.ferdo.equiflow.model.Stock;
-import cz.ferdo.equiflow.model.StockPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,17 +22,18 @@ import java.util.Map;
 @Component
 public class AlphaVantageProvider implements StockDataProvider {
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @Override
-    public Stock fetchStock(String json) {
-        ObjectMapper mapper = new ObjectMapper();
+    public StockDTO parseStock(String json) {
         JsonNode root;
-        JsonNode seriesData = null;
 
         try {
             root = mapper.readTree(json);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        JsonNode seriesData = null;
 
         Iterator<Map.Entry<String, JsonNode>> fields =
                 root.fields();
@@ -58,19 +62,33 @@ public class AlphaVantageProvider implements StockDataProvider {
                     "No Time Series found in AlphaVantage response");
         }
 
-        List<StockPoint> myList = new ArrayList<>();
+        List<StockPointDTO> closePoints = new ArrayList<>();
         Iterator<Map.Entry<String, JsonNode>> points =
                 seriesData.fields();
 
         while (points.hasNext()) {
             Map.Entry<String, JsonNode> entry = points.next();
-            String date = entry.getKey();
-            double close = entry.getValue().get("4. close").asDouble();
+            LocalDate date = LocalDate.parse(entry.getKey());
 
-            myList.add(new StockPoint(date, close));
+            JsonNode day = entry.getValue();
+
+            BigDecimal open = getValue(day, "1. open");
+            BigDecimal high = getValue(day, "2. high");
+            BigDecimal low = getValue(day, "3. low");
+            BigDecimal close = getValue(day, "4. close");
+            BigDecimal volume = getValue(day, "5. volume");
+
+            closePoints.add(new StockPointDTO(date, open, high, low, close, volume));
         }
 
-        return new Stock(root.get("Meta Data").get("2. Symbol").asText(), myList, "USD");
+        String ticker = root.path("Meta Data").path("2. Symbol").asText();
+
+        if (ticker.isBlank()) {
+            throw new IllegalStateException(
+                    "Ticker not found in response");
+        }
+
+        return new StockDTO(ticker, "USD", closePoints, LocalDateTime.now());
     }
 
     @Override
@@ -102,6 +120,19 @@ public class AlphaVantageProvider implements StockDataProvider {
             System.out.println(response);
         }
 
+        System.out.println("RESPONSE: " + response);
         return response;
+    }
+
+    private BigDecimal getValue(
+            JsonNode node,
+            String field
+    ) {
+        String value = node.path(field).asText();
+        System.out.println(
+                "FIELD: " + field +
+                " VALUE: '" + value + "'"
+        );
+        return new BigDecimal(value);
     }
 }

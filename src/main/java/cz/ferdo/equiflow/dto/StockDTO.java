@@ -1,5 +1,6 @@
 package cz.ferdo.equiflow.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,21 +8,12 @@ import java.util.List;
 public record StockDTO(
         String ticker,
         String currency,
-        List<StockPointDTO> data
+        List<StockPointDTO> points,
+        LocalDateTime updateAt
 ) {
     @Override
-    public String ticker() {
-        return ticker;
-    }
-
-    @Override
-    public String currency() {
-        return currency;
-    }
-
-    @Override
-    public List<StockPointDTO> data() {
-        List<StockPointDTO> reversed = new ArrayList<>(data);
+    public List<StockPointDTO> points() {
+        List<StockPointDTO> reversed = new ArrayList<>(points);
         Collections.reverse(reversed);
         return reversed;
     }

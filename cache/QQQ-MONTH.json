@@ -2,10 +2,17 @@
     "Meta Data": {
         "1. Information": "Monthly Prices (open, high, low, close) and Volumes",
         "2. Symbol": "QQQ",
-        "3. Last Refreshed": "2026-05-29",
+        "3. Last Refreshed": "2026-06-09",
         "4. Time Zone": "US/Eastern"
     },
     "Monthly Time Series": {
+        "2026-06-09": {
+            "1. open": "737.0400",
+            "2. high": "748.6500",
+            "3. low": "686.3700",
+            "4. close": "707.8300",
+            "5. volume": "383968767"
+        },
         "2026-05-29": {
             "1. open": "669.1600",
             "2. high": "741.6300",

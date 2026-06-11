@@ -5,15 +5,11 @@ import java.time.LocalDate;
 
 public record StockPointDTO(
     LocalDate date,
-    BigDecimal price
+    BigDecimal open,
+    BigDecimal high,
+    BigDecimal low,
+    BigDecimal close,
+    BigDecimal volume
 ) {
-    @Override
-    public LocalDate date() {
-        return date;
-    }
 
-    @Override
-    public BigDecimal price() {
-        return price;
-    }
 }

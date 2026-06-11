@@ -1,11 +1,12 @@
 package cz.ferdo.equiflow.provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
-import cz.ferdo.equiflow.model.Stock;
 
 public interface StockDataProvider {
 
-    Stock fetchStock(String json);
+    StockDTO parseStock(String json);
 
     String fetchRawJson(StockQuery query);
 }
