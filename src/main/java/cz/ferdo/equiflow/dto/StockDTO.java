@@ -11,10 +11,5 @@ public record StockDTO(
         List<StockPointDTO> points,
         LocalDateTime updateAt
 ) {
-    @Override
-    public List<StockPointDTO> points() {
-        List<StockPointDTO> reversed = new ArrayList<>(points);
-        Collections.reverse(reversed);
-        return reversed;
-    }
+
 }

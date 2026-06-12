@@ -117,7 +117,6 @@ public class AlphaVantageProvider implements StockDataProvider {
 
         if (response != null && !response.contains("Time Series")) {
             System.out.println("INVALID ALPHAVANTAGE RESPONSE:");
-            System.out.println(response);
         }
 
         System.out.println("RESPONSE: " + response);
@@ -129,10 +128,7 @@ public class AlphaVantageProvider implements StockDataProvider {
             String field
     ) {
         String value = node.path(field).asText();
-        System.out.println(
-                "FIELD: " + field +
-                " VALUE: '" + value + "'"
-        );
+
         return new BigDecimal(value);
     }
 }
