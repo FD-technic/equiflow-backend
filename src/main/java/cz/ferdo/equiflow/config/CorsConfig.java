@@ -18,7 +18,8 @@ public class CorsConfig {
                 registry.addMapping("/**")
                        .allowedOrigins(
                                "http://localhost:5173",
-                               "https://equiflow-client.vercel.app"
+                               "https://equiflow-client.vercel.app",
+                               "https://equiflow.ferdo.eu"
                        )
                         .allowedMethods("*");
             }

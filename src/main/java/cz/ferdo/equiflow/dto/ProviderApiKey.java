@@ -1,4 +1,4 @@
-package cz.ferdo.equiflow.config;
+package cz.ferdo.equiflow.dto;
 
 import cz.ferdo.equiflow.model.Provider;
 

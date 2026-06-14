@@ -5,16 +5,11 @@ import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
 import cz.ferdo.equiflow.entity.StockEntity;
 import cz.ferdo.equiflow.mapper.StockMapper;
-import cz.ferdo.equiflow.config.ProviderApiKey;
 import cz.ferdo.equiflow.provider.AlphaVantageProvider;
 import cz.ferdo.equiflow.repository.StockJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -85,36 +80,7 @@ public class StockServiceImpl implements StockService {
     }
 
 
-    @Override
-    public String setApiKey(ProviderApiKey apiKey) {
-        Path path = Paths.get(
-                "settings/" + apiKey.provider() + ".key"
-        );
 
-        try {
-            Files.createDirectories(Paths.get("settings"));
-            Files.writeString(path, apiKey.apiKey());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return "API key for provider " + apiKey.provider() + " saved";
-    }
-
-    @Override
-    public String getApiKey(String provider) {
-        String returnedKey;
-        Path path = Paths.get(
-                "settings/" + provider + ".key"
-        );
-
-        try {
-            returnedKey = Files.readString(path);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return "API key for provider " + provider + " is: " + returnedKey;
-    }
 
     private boolean dataValid(StockEntity stock) {
 

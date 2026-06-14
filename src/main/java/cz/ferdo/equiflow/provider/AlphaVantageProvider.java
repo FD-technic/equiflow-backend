@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockPointDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
+import cz.ferdo.equiflow.service.ApiKeyService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,6 +21,11 @@ import java.util.Map;
 public class AlphaVantageProvider implements StockDataProvider {
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final ApiKeyService apiKeyService;
+
+    public AlphaVantageProvider(ApiKeyService apiKeyService) {
+        this.apiKeyService = apiKeyService;
+    }
 
     @Override
     public StockDTO parseStock(String json) {
@@ -95,14 +98,7 @@ public class AlphaVantageProvider implements StockDataProvider {
     public String fetchRawJson(StockQuery query) {
         RestClient client = RestClient.create();
 
-        String apiKey = "NULL";
-
-        try {
-            apiKey = Files.readString(Paths.get("settings/av.key"));
-        } catch (IOException e) {
-            System.out.println("API key not found");
-            throw new RuntimeException(e);
-        }
+        String apiKey = apiKeyService.getApiKey("av");
 
         String function = switch (query.safePeriod()) {
             case WEEK -> "TIME_SERIES_WEEKLY";

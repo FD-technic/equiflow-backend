@@ -3,7 +3,8 @@ package cz.ferdo.equiflow.controller;
 import cz.ferdo.equiflow.dto.MultiStockDTO;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
-import cz.ferdo.equiflow.config.ProviderApiKey;
+import cz.ferdo.equiflow.dto.ProviderApiKey;
+import cz.ferdo.equiflow.service.ApiKeyService;
 import cz.ferdo.equiflow.service.StockService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class StockController {
 
     private final StockService stockService;
+    private final ApiKeyService apiKeyService;
 
-    public StockController(StockService stockService) {
+    public StockController(StockService stockService, ApiKeyService apiKeyService) {
         this.stockService = stockService;
+        this.apiKeyService = apiKeyService;
     }
 
     @GetMapping("/api")
@@ -38,7 +41,7 @@ public class StockController {
      */
     @GetMapping("admin/getkey/{provider}")
     public String getApiKey(@PathVariable String provider) {
-        return stockService.getApiKey(provider);
+        return apiKeyService.getApiKey(provider);
     }
 
     /**
@@ -48,6 +51,6 @@ public class StockController {
      */
     @PostMapping("admin/setkey")
     public String setApiKey(@RequestBody ProviderApiKey apiKey) {
-        return stockService.setApiKey(apiKey);
+        return apiKeyService.setApiKey(apiKey);
     }
 }
