@@ -3,7 +3,9 @@ package cz.ferdo.equiflow.service;
 import cz.ferdo.equiflow.dto.ProviderApiKey;
 import cz.ferdo.equiflow.entity.ProviderApiKeyEntity;
 import cz.ferdo.equiflow.repository.ProviderApiKeyRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ApiKeyServiceImpl implements ApiKeyService {
 
     private final ProviderApiKeyRepository providerApiKeyRepository;
