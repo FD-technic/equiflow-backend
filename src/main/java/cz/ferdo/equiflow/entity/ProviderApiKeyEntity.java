@@ -3,7 +3,7 @@ package cz.ferdo.equiflow.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity(name = "provider_api_key")
 public class ProviderApiKeyEntity {
 
     @Id

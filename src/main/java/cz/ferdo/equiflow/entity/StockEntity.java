@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "stock")
 @Table(
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {"ticker", "period"}

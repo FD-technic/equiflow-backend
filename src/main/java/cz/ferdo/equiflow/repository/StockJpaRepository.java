@@ -1,5 +1,6 @@
 package cz.ferdo.equiflow.repository;
 
+import cz.ferdo.equiflow.entity.PositionEntity;
 import cz.ferdo.equiflow.entity.StockEntity;
 import cz.ferdo.equiflow.model.Period;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,9 @@ public interface StockJpaRepository extends JpaRepository<StockEntity, Long> {
     Optional<StockEntity> findByTickerAndPeriod(
             String ticker,
             Period period
+    );
+
+    Optional<PositionEntity> findByTicker(
+            String ticker
     );
 }

@@ -1,6 +1,5 @@
 package cz.ferdo.equiflow.service;
 
-import cz.ferdo.equiflow.dto.MultiStockDTO;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockQuery;
 import cz.ferdo.equiflow.entity.StockEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -27,16 +25,7 @@ public class StockServiceImpl implements StockService {
         this.stockMapper = stockMapper;
     }
 
-    @Override
-    public MultiStockDTO getAll() {
 
-        List<StockDTO> stocks = stockJpaRepository.findAll()
-                .stream()
-                .map(stockMapper::toDTO)
-                .toList();
-
-        return new MultiStockDTO(stocks);
-    }
 
     @Transactional
     @Override

@@ -1,17 +1,27 @@
-package cz.ferdo.equiflow.dto;
+package cz.ferdo.equiflow.entity;
 
 import cz.ferdo.equiflow.model.Role;
+import jakarta.persistence.*;
 
-public class UserDTO {
+import java.util.List;
+
+@Entity(name = "users")
+public class UserEntity {
+
+    public UserEntity() {}
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+
     private String userName;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    public UserDTO(String userName, Role role) {
-        this.userName = userName;
-        this.role = role;
-    }
+    @OneToMany(mappedBy = "owner")
+    private List<PortfolioEntity> portfolios;
 
     // === Getter / Setter ===
 
@@ -19,15 +29,11 @@ public class UserDTO {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String name) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -38,4 +44,6 @@ public class UserDTO {
     public void setRole(Role role) {
         this.role = role;
     }
+
+
 }
