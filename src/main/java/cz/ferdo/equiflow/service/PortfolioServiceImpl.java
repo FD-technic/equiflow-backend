@@ -68,12 +68,9 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public List<PortfolioDTO> getAll() {
+    public List<PortfolioListDTO> getAll() {
 
-        return portfolioRepository.findAll()
-                .stream()
-                .map(portfolioMapper::toDTO)
-                .toList();
+        return portfolioRepository.findPortfolioList();
     }
 
     @Transactional
@@ -93,7 +90,6 @@ public class PortfolioServiceImpl implements PortfolioService {
         entity.addPosition(positionMapper.toEntity(positionDTO));
 
         PortfolioEntity saved = portfolioRepository.save(entity);
-
         return portfolioMapper.toDTO(saved);
     }
 

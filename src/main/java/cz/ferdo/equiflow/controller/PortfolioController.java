@@ -2,6 +2,7 @@ package cz.ferdo.equiflow.controller;
 
 import cz.ferdo.equiflow.dto.PortfolioDTO;
 import cz.ferdo.equiflow.dto.PortfolioDetailDTO;
+import cz.ferdo.equiflow.dto.PortfolioListDTO;
 import cz.ferdo.equiflow.dto.PositionDTO;
 import cz.ferdo.equiflow.service.PortfolioService;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class PortfolioController {
      * @return seznam portfolií
      */
     @GetMapping()
-    public List<PortfolioDTO> getAllPortfolios() {
+    public List<PortfolioListDTO> getAllPortfolios() {
 
         return portfolioService.getAll();
     }
 
     /**
-     * Vrátí konkrétní portfolia podle ID.
+     * Vrátí detail konkrétního portfolia podle ID.
      *
      * @param portfolioId ID portfolia
      * @return konkrétní portfolio
