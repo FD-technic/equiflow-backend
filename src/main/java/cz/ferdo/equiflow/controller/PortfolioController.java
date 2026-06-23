@@ -1,6 +1,7 @@
 package cz.ferdo.equiflow.controller;
 
 import cz.ferdo.equiflow.dto.PortfolioDTO;
+import cz.ferdo.equiflow.dto.PortfolioDetailDTO;
 import cz.ferdo.equiflow.dto.PositionDTO;
 import cz.ferdo.equiflow.service.PortfolioService;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class PortfolioController {
      * @return konkrétní portfolio
      */
     @GetMapping("/{portfolioId}")
-    public PortfolioDTO findPortfolio(@PathVariable Long portfolioId) {
+    public PortfolioDetailDTO findPortfolio(@PathVariable Long portfolioId) {
 
         return portfolioService.getById(portfolioId);
     }

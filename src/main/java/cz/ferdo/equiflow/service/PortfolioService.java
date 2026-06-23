@@ -1,6 +1,7 @@
 package cz.ferdo.equiflow.service;
 
 import cz.ferdo.equiflow.dto.PortfolioDTO;
+import cz.ferdo.equiflow.dto.PortfolioDetailDTO;
 import cz.ferdo.equiflow.dto.PositionDTO;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public interface PortfolioService {
      * @param id ID portfolia
      * @return nalezené portfolio
      */
-    PortfolioDTO getById(Long id);
+    PortfolioDetailDTO getById(Long id);
 
     /**
      * Vrátí všechna uložená portfolia.
