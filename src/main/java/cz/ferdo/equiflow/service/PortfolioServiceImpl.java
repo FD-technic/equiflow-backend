@@ -46,14 +46,15 @@ public class PortfolioServiceImpl implements PortfolioService {
         return portfolioMapper.toDTO(saved);
     }
 
+    @Transactional
     @Override
-    public PortfolioDetailDTO getById(Long id) {
+    public PortfolioDetailDTO findById(Long id) {
 
         PortfolioDTO portfolio = portfolioMapper.toDTO(findPortfolio(id));
 
         List<PositionDetailDTO> positions = new ArrayList<>();
         for (PositionDTO p : portfolio.getPositions()) {
-            StockQuery query = new StockQuery(p.getTicker(), Period.DAY, Interval.DAILY);
+            StockQuery query = new StockQuery(p.provider(), p.ticker(), Period.DAY, Interval.DAILY);
             positions.add(createPositionDetail(p, query));
         }
 
@@ -68,7 +69,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public List<PortfolioListDTO> getAll() {
+    public List<PortfolioListDTO> findAll() {
 
         return portfolioRepository.findPortfolioList();
     }
@@ -84,6 +85,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         return portfolioMapper.toDTO(portfolioRepository.save(newEntity));
     }
 
+    @Transactional
     @Override
     public PortfolioDTO addPosition(Long portfolioId, PositionDTO positionDTO) {
         PortfolioEntity entity = findPortfolio(portfolioId);
@@ -123,17 +125,17 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     private PositionDetailDTO createPositionDetail(PositionDTO positionDTO, StockQuery query) {
-        StockDTO stockDTO = stockService.getAlphaVantageStock(query);
-        BigDecimal buyPrice = positionDTO.getBuyPrice();
+        StockDTO stockDTO = stockService.findByQuery(query);
+        BigDecimal buyPrice = positionDTO.buyPrice();
         BigDecimal currentPrice = stockDTO.points().getLast().close();
-        BigDecimal quantity = BigDecimal.valueOf(positionDTO.getQuantity());
+        BigDecimal quantity = BigDecimal.valueOf(positionDTO.quantity());
         BigDecimal investValue = quantity.multiply(buyPrice);
         BigDecimal currentValue = quantity.multiply(currentPrice);
         BigDecimal profit = currentValue.subtract(investValue);
 
         return new PositionDetailDTO(
-                positionDTO.getTicker(),
-                positionDTO.getQuantity(),
+                positionDTO.ticker(),
+                positionDTO.quantity(),
                 buyPrice,
                 currentPrice,
                 investValue,

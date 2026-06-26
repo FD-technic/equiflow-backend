@@ -14,7 +14,7 @@ public class StockMapper {
                         .stream()
                         .map(StockPointMapper::toDTO)
                         .toList(),
-                source.getUpdateAt()
+                source.getUpdatedAt()
         );
     }
 
@@ -24,7 +24,7 @@ public class StockMapper {
 
         entity.setTicker(source.ticker());
         entity.setCurrency(source.currency());
-        entity.setUpdateAt(source.updateAt());
+        entity.setUpdatedAt(source.updateAt());
         entity.setPoints(source.points()
                 .stream()
                 .map(StockPointMapper::toEntity)
@@ -36,7 +36,7 @@ public class StockMapper {
 
     public void updateEntity( StockDTO source, StockEntity target) {
         target.setCurrency(source.currency());
-        target.setUpdateAt(source.updateAt());
+        target.setUpdatedAt(source.updateAt());
 
         target.setPoints(
                 source.points()

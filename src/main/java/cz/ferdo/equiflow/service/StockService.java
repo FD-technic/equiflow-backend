@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface StockService {
 
-    StockDTO getAlphaVantageStock(StockQuery query);
+    StockDTO findByQuery(StockQuery query);
 }

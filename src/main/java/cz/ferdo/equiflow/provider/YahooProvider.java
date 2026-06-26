@@ -1,5 +1,6 @@
 package cz.ferdo.equiflow.provider;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.ferdo.equiflow.dto.StockDTO;
 import cz.ferdo.equiflow.dto.StockPointDTO;
@@ -8,7 +9,6 @@ import cz.ferdo.equiflow.model.Provider;
 import cz.ferdo.equiflow.service.ApiKeyService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,26 +19,26 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AlphaVantageProvider implements StockDataProvider {
+public class YahooProvider implements StockDataProvider {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final ApiKeyService apiKeyService;
 
-    public AlphaVantageProvider(ApiKeyService apiKeyService) {
+    public YahooProvider(ApiKeyService apiKeyService) {
         this.apiKeyService = apiKeyService;
     }
 
-
-    @Override
-    public Provider getProvider() {
-        return Provider.ALPHAVANTAGE;
-    }
 
     @Override
     public StockDTO load(StockQuery query) {
         return parseStock(fetchRawJson(query));
     }
 
+    @Override
+    public Provider getProvider() {
+        return Provider.YAHOO;
+    }
+    
     @Override
     public StockDTO parseStock(String json) {
         JsonNode root;

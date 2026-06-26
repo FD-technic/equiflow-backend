@@ -2,6 +2,7 @@ package cz.ferdo.equiflow.service;
 
 import cz.ferdo.equiflow.dto.ProviderApiKey;
 import cz.ferdo.equiflow.entity.ProviderApiKeyEntity;
+import cz.ferdo.equiflow.model.Provider;
 import cz.ferdo.equiflow.repository.ProviderApiKeyRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     }
 
     @Override
-    public String getApiKey(String provider) {
+    public String getApiKey(Provider provider) {
 
         return providerApiKeyRepository.findById(provider)
                 .map(ProviderApiKeyEntity::getApiKey)
@@ -32,7 +33,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
         ProviderApiKeyEntity entity = new ProviderApiKeyEntity();
 
-        entity.setProvider(apiKey.provider().toString());
+        entity.setProvider(apiKey.provider());
         entity.setApiKey(apiKey.apiKey());
 
         providerApiKeyRepository.save(entity);

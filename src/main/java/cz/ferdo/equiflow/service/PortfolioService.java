@@ -25,14 +25,14 @@ public interface PortfolioService {
      * @param id ID portfolia
      * @return nalezené portfolio
      */
-    PortfolioDetailDTO getById(Long id);
+    PortfolioDetailDTO findById(Long id);
 
     /**
      * Vrátí všechna uložená portfolia.
      *
      * @return seznam portfolií
      */
-    List<PortfolioListDTO> getAll();
+    List<PortfolioListDTO> findAll();
 
     /**
      * Aktualizuje údaje existujícího portfolia.

@@ -26,8 +26,7 @@ public class PortfolioController {
      * @return uložené portfolio včetně přiděleného ID
      */
     @PostMapping()
-    public PortfolioDTO addPortfolio(@RequestBody PortfolioDTO portfolioDTO) {
-        System.out.println("Owner: " + portfolioDTO.getOwnerId());
+    public PortfolioDTO create(@RequestBody PortfolioDTO portfolioDTO) {
         return portfolioService.addNew(portfolioDTO);
     }
 
@@ -37,9 +36,9 @@ public class PortfolioController {
      * @return seznam portfolií
      */
     @GetMapping()
-    public List<PortfolioListDTO> getAllPortfolios() {
+    public List<PortfolioListDTO> findAll() {
 
-        return portfolioService.getAll();
+        return portfolioService.findAll();
     }
 
     /**
@@ -51,7 +50,7 @@ public class PortfolioController {
     @GetMapping("/{portfolioId}")
     public PortfolioDetailDTO findPortfolio(@PathVariable Long portfolioId) {
 
-        return portfolioService.getById(portfolioId);
+        return portfolioService.findById(portfolioId);
     }
 
     /**

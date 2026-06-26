@@ -1,0 +1,19 @@
+@startuml "GET /portfolios"
+
+participant Client
+participant PortfolioController
+participant PortfolioService
+database PortfolioRepository
+database PostgreSQL
+
+Client -> PortfolioController : GET /api/portfolios
+PortfolioController -> PortfolioService : findAll()
+PortfolioService -> PortfolioRepository : findAll()
+PortfolioRepository -> PostgreSQL : SELECT *\nFROM portfolio
+
+PostgreSQL --> PortfolioRepository : PortfolioEntity[]
+PortfolioRepository --> PortfolioService : List<PortfolioEntity>
+PortfolioService --> PortfolioController : List<PortfolioListDTO>
+PortfolioController --> Client : HTTP 200 OK\nPortfolioDetailDTO (JSON)
+
+@enduml

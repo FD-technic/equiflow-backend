@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"ticker", "portfolio_id"}
+                        columnNames = {"stock_id", "portfolio_id"}
                 )
         }
 )
@@ -20,12 +20,13 @@ public class PositionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String ticker;
+    private BigDecimal buyPrice;
 
     private long quantity;
 
-    private BigDecimal buyPrice;
+    @ManyToOne
+    @JoinColumn(name = "stock_id", nullable = false)
+    private StockEntity stock;
 
     @ManyToOne
     @JoinColumn(name = "portfolio_id", nullable = false)
@@ -37,12 +38,12 @@ public class PositionEntity {
         return id;
     }
 
-    public String getTicker() {
-        return ticker;
+    public StockEntity getStock() {
+        return stock;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setStock(StockEntity stock) {
+        this.stock = stock;
     }
 
     public long getQuantity() {

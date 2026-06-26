@@ -23,8 +23,8 @@ public class UserController {
      * @return uložený uživatel včetně přiděleného ID
      */
     @PostMapping()
-    public UserDTO addUser(@RequestBody UserDTO user) {
-        return userService.addNew(user);
+    public UserDTO create(@RequestBody UserDTO user) {
+        return userService.create(user);
     }
 
     /**
@@ -33,8 +33,8 @@ public class UserController {
      * @return seznam uživatelů
      */
     @GetMapping()
-    public List<UserDTO> getAllUsers() {
-        return userService.getAll();
+    public List<UserDTO> findAll() {
+        return userService.findAll();
     }
 
     /**
@@ -44,19 +44,8 @@ public class UserController {
      * @return nalezený uživatel
      */
     @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable Long id) {
-        return userService.getById(id);
-    }
-
-    /**
-     * Odstraní uživatele z databáze.
-     *
-     * @param id identifikátor uživatele
-     * @return potvrzení o úspěšném smazání
-     */
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.remove(id);
+    public UserDTO findById(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
     /**
@@ -67,7 +56,19 @@ public class UserController {
      * @return aktualizovaný uživatel
      */
     @PutMapping("/{id}")
-    public UserDTO editUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return userService.edit(userDTO, id);
+    public UserDTO update(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return userService.update(userDTO, id);
     }
+
+    /**
+     * Odstraní uživatele z databáze.
+     *
+     * @param id identifikátor uživatele
+     * @return potvrzení o úspěšném smazání
+     */
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        userService.delete(id);
+    }
+
 }

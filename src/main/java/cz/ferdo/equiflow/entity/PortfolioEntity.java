@@ -41,7 +41,7 @@ public class PortfolioEntity {
         position.setPortfolio(this);
 
         for (PositionEntity p : positions) {
-            if (position.getTicker().equals(p.getTicker())) {
+            if (position.getStock().getTicker().equals(p.getStock().getTicker())) {
                 long totalQuantity = p.getQuantity() + position.getQuantity();
                 p.setBuyPrice(averagePrice(p, position));
                 p.setQuantity(totalQuantity);

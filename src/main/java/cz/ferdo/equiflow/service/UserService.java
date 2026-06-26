@@ -8,10 +8,10 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    UserDTO addNew(UserDTO user);
-    UserDTO getById(Long id);
-    List<UserDTO> getAll();
-    void remove(Long id);
-    UserDTO edit(UserDTO userDTO, Long id);
+    UserDTO create(UserDTO user);
+    UserDTO findById(Long id);
+    List<UserDTO> findAll();
+    UserDTO update(UserDTO userDTO, Long id);
+    void delete(Long id);
 
 }

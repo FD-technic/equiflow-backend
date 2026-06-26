@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO addNew(UserDTO user) {
+    public UserDTO create(UserDTO user) {
 
         UserEntity entity = userMapper.toEntity(user);
         UserEntity saved = userRepository.save(entity);
@@ -32,14 +32,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getById(Long id) {
+    public UserDTO findById(Long id) {
         UserEntity user = findUser(id);
 
         return userMapper.toDTO(user);
     }
 
     @Override
-    public List<UserDTO> getAll() {
+    public List<UserDTO> findAll() {
         return userRepository.findAll()
                 .stream()
                 .map(userMapper::toDTO)
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void remove(Long id) {
+    public void delete(Long id) {
 
         UserEntity user = findUser(id);
         userRepository.delete(user);
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO edit(UserDTO userDTO, Long id) {
+    public UserDTO update(UserDTO userDTO, Long id) {
         UserEntity oldEntity = findUser(id);
         UserEntity newEntity = userMapper.updateEntity(userDTO, oldEntity);
 

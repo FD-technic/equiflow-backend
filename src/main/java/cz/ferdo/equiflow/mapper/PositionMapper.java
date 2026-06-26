@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 public class PositionMapper {
     public PositionDTO toDTO (PositionEntity source) {
         return new PositionDTO(
-                source.getTicker(),
+                source.getStock().getProvider(),
+                source.getStock().getTicker(),
                 source.getQuantity(),
                 source.getBuyPrice()
         );
@@ -17,9 +18,8 @@ public class PositionMapper {
     public PositionEntity toEntity(PositionDTO source) {
         PositionEntity entity = new PositionEntity();
 
-        entity.setTicker(source.getTicker());
-        entity.setQuantity(source.getQuantity());
-        entity.setBuyPrice(source.getBuyPrice());
+        entity.setQuantity(source.quantity());
+        entity.setBuyPrice(source.buyPrice());
 
         return entity;
     }

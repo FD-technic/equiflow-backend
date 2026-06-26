@@ -1,6 +1,7 @@
 package cz.ferdo.equiflow.entity;
 
 import cz.ferdo.equiflow.model.Period;
+import cz.ferdo.equiflow.model.Provider;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 @Entity(name = "stock")
 @Table(
         uniqueConstraints = @UniqueConstraint(
-                columnNames = {"ticker", "period"}
+                columnNames = {"provider", "ticker", "period"}
         )
 )
 public class StockEntity {
@@ -18,18 +19,24 @@ public class StockEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Provider provider;
+
+    @Column(nullable = false)
     private String ticker;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Period period;
 
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     @OneToMany(
             mappedBy = "stock",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<StockPointEntity> points = new ArrayList<>();
+    private final List<StockPointEntity> points = new ArrayList<>();
 
     private String currency;
     // Getters & Setters
@@ -40,6 +47,14 @@ public class StockEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     public String getTicker() {
@@ -58,12 +73,12 @@ public class StockEntity {
         this.period = period;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return updateAt;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getCurrency() {
